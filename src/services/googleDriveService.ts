@@ -28,9 +28,7 @@ export default class GoogleDriveService {
     });
   }
 
-  public async getFileMetadata(
-    fileId: string
-  ): Promise<any> {
+  public async getFileMetadata(fileId: string): Promise<any> {
     const drive = await this.getDriveInstance();
     const response = await drive.files.get({
       fileId,

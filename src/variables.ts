@@ -10,3 +10,4 @@ export const google_private_key = process.env.GOOGLE_PRIVATE_KEY!.replace(
   /\\n/g,
   '\n'
 );
+export const port = process.env.PORT || 3000;

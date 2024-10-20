@@ -3,12 +3,13 @@ import GoogleDriveService from './services/googleDriveService';
 import DBService from './services/dbService';
 import { upload } from './middlewares/multerMiddleware';
 import fs from 'fs';
+import { PrismaClient } from '@prisma/client';
+import { port } from './variables';
 
 const app = express();
-const port = 3000;
 const googleDriveService = new GoogleDriveService();
 const db = new DBService();
-
+const prisma = new PrismaClient();
 
 app.post(
   '/upload',
@@ -25,7 +26,8 @@ app.post(
       }
 
       const filePath = req.file.path;
-      let driveResponse, downloadLink = null;
+      let driveResponse,
+        downloadLink = null;
 
       try {
         driveResponse = await googleDriveService.uploadFile(filePath);
@@ -64,7 +66,7 @@ app.post(
       res.status(200).json({
         fileId: driveResponse?.id,
         downloadLink: downloadLink?.webViewLink,
-        message: 'success'
+        message: 'success',
       });
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -86,44 +88,58 @@ app.get('/file/:sharedKey', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log('Error while getting file:', error);
-    res.status(500).json({ 
-      message: "Error while getting file",
-      error 
+    res.status(500).json({
+      message: 'Error while getting file',
+      error,
     });
   }
 });
-
 
 app.get('/download/:fileId', async (req: Request, res: Response) => {
   const fileId = req.params.fileId;
 
   try {
-      const fileMetadata = await googleDriveService.getFileMetadata(fileId);
-      const fileName = fileMetadata.name;
+    const fileMetadata = await googleDriveService.getFileMetadata(fileId);
+    const fileName = fileMetadata.name;
 
-      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
 
-      const drive = await googleDriveService.getDriveInstance();
-      const fileStream = await drive.files.get(
-        { fileId, alt: 'media' },
-        { responseType: 'stream' }
-      );
+    const drive = await googleDriveService.getDriveInstance();
+    const fileStream = await drive.files.get(
+      { fileId, alt: 'media' },
+      { responseType: 'stream' }
+    );
 
-      fileStream.data
-        .on('end', () => {
-          console.log('File streamed successfully:', fileName);
-        })
-        .on('error', (err: any) => {
-          console.error('Error while streaming file:', err);
-          res.status(500).send('Error downloading the file.');
-        })
-        .pipe(res);
-    } catch (error) {
-      console.error('Error downloading file from Google Drive:', error);
-      res.status(500).send('Failed to download the file.');
-    }
+    fileStream.data
+      .on('end', () => {
+        console.log('File streamed successfully:', fileName);
+      })
+      .on('error', (err: any) => {
+        console.error('Error while streaming file:', err);
+        res.status(500).send('Error downloading the file.');
+      })
+      .pipe(res);
+  } catch (error) {
+    console.error('Error downloading file from Google Drive:', error);
+    res.status(500).send('Failed to download the file.');
+  }
 });
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+const shutdown = async () => {
+  console.log('Shutting down server...');
+  try {
+    await prisma.$disconnect();
+    console.log('Disconnected from the database.');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error disconnecting from the database:', error);
+    process.exit(1);
+  }
+};
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
