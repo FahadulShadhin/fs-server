@@ -126,7 +126,7 @@ app.get('/download/:fileId', async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on PORT :${port}`);
 });
 
 const shutdown = async () => {
