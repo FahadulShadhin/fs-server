@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 
 import { google, drive_v3 } from 'googleapis';
 import path from 'path';
