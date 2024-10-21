@@ -129,7 +129,7 @@ app.listen(port, () => {
   console.log(`Server is running on PORT :${port}`);
 });
 
-const shutdown = async () => {
+async function shutdown() {
   console.log('Shutting down server...');
   try {
     await prisma.$disconnect();
