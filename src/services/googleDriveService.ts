@@ -1,6 +1,4 @@
 import fs from 'fs';
-import { Response } from 'express';
-
 import { google, drive_v3 } from 'googleapis';
 import path from 'path';
 import {
