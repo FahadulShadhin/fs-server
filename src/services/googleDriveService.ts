@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Response } from 'express';
 
 import { google, drive_v3 } from 'googleapis';
 import path from 'path';
@@ -100,6 +101,13 @@ export default class GoogleDriveService {
         .on('end', () => resolve())
         .on('error', (err: any) => reject(err))
         .pipe(destination);
+    });
+  }
+
+  public async deleteFile(fileId: string): Promise<void> {
+    const drive = await this.getDriveInstance();
+    await drive.files.delete({
+      fileId,
     });
   }
 }

@@ -125,6 +125,18 @@ app.get('/download/:fileId', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/delete/:fileId', async (req: Request, res: Response) => {
+  const fileId = req.params.fileId;
+
+  try {
+    await db.deleteSecureFile(fileId);
+    await googleDriveService.deleteFile(fileId);
+    res.status(204).send(`File deleted. ID: ${fileId}`);
+  } catch (error) {
+    res.status(500).send('Error while deleting file.');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on PORT :${port}`);
 });
@@ -139,7 +151,7 @@ async function shutdown() {
     console.error('Error disconnecting from the database:', error);
     process.exit(1);
   }
-};
+}
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);

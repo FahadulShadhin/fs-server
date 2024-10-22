@@ -29,6 +29,14 @@ export default class DBService {
     });
   }
 
+  async deleteSecureFile(fileId: string) {
+    return await this.prisma.securefile.delete({
+      where: {
+        fileId,
+      },
+    });
+  }
+
   async getAllFiles() {
     return await this.prisma.securefile.findMany();
   }
