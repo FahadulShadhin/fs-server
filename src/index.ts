@@ -3,13 +3,11 @@ import GoogleDriveService from './services/googleDriveService';
 import DBService from './services/dbService';
 import { upload } from './middlewares/multerMiddleware';
 import fs from 'fs';
-import { PrismaClient } from '@prisma/client';
 import { port } from './variables';
 
 const app = express();
 const googleDriveService = new GoogleDriveService();
 const db = new DBService();
-const prisma = new PrismaClient();
 
 app.post(
   '/upload',
@@ -144,7 +142,7 @@ app.listen(port, () => {
 async function shutdown() {
   console.log('Shutting down server...');
   try {
-    await prisma.$disconnect();
+    await db.disconnect();
     console.log('Disconnected from the database.');
     process.exit(0);
   } catch (error) {
