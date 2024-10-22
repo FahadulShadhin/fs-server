@@ -1,3 +1,3 @@
 # fs-server
 
-server to handle google drive and db logic of file-share-cli
+Server to handle google drive and db logic for [file-share-cli](https://github.com/FahadulShadhin/file-share-cli).
