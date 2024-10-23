@@ -19,7 +19,7 @@ app.post(
       );
 
       if (!req.file || !hashedPassCode || !sharedKey) {
-        res.status(400).send('Something went wrong white getting file...');
+        res.status(400).send('Something went wrong while getting file...');
         return;
       }
 
