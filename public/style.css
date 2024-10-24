@@ -1,0 +1,57 @@
+body {
+  background: #e7ddca;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+section {
+  padding: 2rem;
+}
+
+.title {
+  font-size: 1.4rem;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.title {
+  margin: 1rem 0;
+}
+
+.routes, .links {
+  margin: 1rem 0;
+}
+
+.links {
+  display: flex;
+  gap: 2rem;
+}
+
+.routes ul, footer ul {
+  margin: 0;
+  padding: 0;
+}
+
+.routes ul {
+  padding: 0 1.5rem;
+}
+
+footer ul {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  list-style-type: none;
+}
+
+footer li {
+  font-size: 1rem;
+  background-color: #dfbc7a;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+}

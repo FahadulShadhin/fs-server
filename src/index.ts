@@ -4,10 +4,25 @@ import DBService from './services/dbService';
 import { upload } from './middlewares/multerMiddleware';
 import fs from 'fs';
 import { port } from './variables';
+import path from 'path';
 
 const app = express();
+app.use(express.static(path.join(__dirname, '../public')));
 const googleDriveService = new GoogleDriveService();
 const db = new DBService();
+
+app.get('/', async (_: Request, res: Response) => {
+  const filePath = path.join(__dirname, '../public/index.html');
+
+  fs.readFile(filePath, 'utf8', (err, html) => {
+    if (err) {
+      console.error('Error reading the file', err);
+      res.status(500).send('Server Error');
+    } else {
+      res.status(200).send(html);
+    }
+  });
+})
 
 app.post(
   '/upload',
